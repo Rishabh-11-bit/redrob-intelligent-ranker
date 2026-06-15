@@ -1,0 +1,10 @@
+artifacts/
+__pycache__/
+*/__pycache__/
+*.pyc
+submission.csv
+submission_*.csv
+.DS_Store
+data/*.jsonl
+deck/node_modules/
+deck/slide-*.jpg
