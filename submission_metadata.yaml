@@ -1,0 +1,79 @@
+# Redrob Hackathon — Submission Metadata
+# Fill the TODO fields before uploading via the portal.
+
+team_name: "rishabh-gaikwad"   # change if you prefer a different display name
+
+primary_contact:
+  name: "Rishabh Gaikwad"
+  email: "rishabhgaikwad42@gmail.com"
+  phone: "+91-TODO"          # required for top-50 / top-10 outreach
+
+team_members:
+  - name: "Rishabh Gaikwad"
+    email: "rishabhgaikwad42@gmail.com"
+    role: "Team Lead / ML Engineer"
+
+# ---------------------------------------------------------------------------
+# Code and reproducibility
+# ---------------------------------------------------------------------------
+github_repo: "https://github.com/Rishabh-11-bit/redrob-intelligent-ranker"   # create this repo, then push
+sandbox_link: "https://huggingface.co/spaces/Rishabh-11-bit/redrob-ranker"   # TODO deploy
+
+reproduce_command: "python rank.py --candidates ./data/candidates.jsonl --out ./submission.csv"
+# Optional dense fusion (after running precompute_embeddings.py):
+# python rank.py --candidates ./data/candidates.jsonl --out ./submission.csv \
+#                --dense ./artifacts/cand_emb.npy --dense-jd ./artifacts/jd_emb.npy \
+#                --dense-ids ./artifacts/cand_ids.txt
+
+compute:
+  platform: "TODO (e.g. Local Linux box / MacBook)"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.11"
+  os: "TODO"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  pre_computation_required: true            # dense embeddings precomputed offline
+  pre_computation_time_minutes: 20          # approx, full 100K on CPU; faster with GPU/batching
+
+# ---------------------------------------------------------------------------
+# AI tools declaration (transparency only — not penalized)
+# ---------------------------------------------------------------------------
+ai_tools_used:
+  - "Claude"
+ai_usage_summary: |
+  Used Claude for architecture discussion, code review, and drafting the
+  scoring logic and docs. All design decisions (the title-coherence gate, the
+  career-narrative-only embedding choice, the honeypot checks, the behavioral
+  multiplier) were specified and verified by me against the real dataset. No
+  candidate data was used to train or fine-tune any model; the only model used
+  is a local open-source embedding model (bge-small-en-v1.5) run offline.
+
+# ---------------------------------------------------------------------------
+# Approach summary
+# ---------------------------------------------------------------------------
+methodology_summary: |
+  Hybrid, explainable ranker. The JD is hand-encoded into structured
+  requirements and disqualifiers. Each candidate gets five base components:
+  (1) title/role coherence — the decisive gate against keyword stuffers; a
+  non-technical current title is heavily penalized regardless of skills;
+  (2) genuine build-evidence mined from career DESCRIPTIONS (not the skills
+  list, where the trap lives) for ranking/search/recommendation/retrieval work;
+  (3) hybrid semantic similarity = TF-IDF fused with bge-small dense embeddings
+  of the career narrative; (4) location fit (India / Pune-Noida required, no
+  visa sponsorship abroad); (5) a soft 6-8yr experience band. A disqualifier
+  multiplier (services-only career, title-chaser tenure, CV/speech-only,
+  research-only) and a behavioral-availability multiplier (recruiter response
+  rate, recency, open-to-work, notice period) modify the base. Honeypots with
+  impossible profiles are detected via temporal/consistency checks and forced
+  to the bottom. Ranking runs in <1 min for 100K on CPU with no network.
+
+# ---------------------------------------------------------------------------
+# Declarations
+# ---------------------------------------------------------------------------
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true
