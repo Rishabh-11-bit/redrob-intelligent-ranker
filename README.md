@@ -1,4 +1,5 @@
 # Redrob — Intelligent Candidate Discovery & Ranking
+**🔗 Live demo (sandbox):** https://huggingface.co/spaces/rishh36/redrob-ranker
 
 Ranks the top-100 candidates from a 100K pool for the released Senior AI
 Engineer JD — the way a great recruiter would, not by keyword matching.
