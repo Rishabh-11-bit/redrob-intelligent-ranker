@@ -49,7 +49,20 @@ def semantic_similarity(docs: list[str], dense: np.ndarray | None,
 
 
 def score_candidates(candidates: list[dict], dense: np.ndarray | None = None,
-                     dense_jd: np.ndarray | None = None) -> list[dict]:
+                     dense_jd: np.ndarray | None = None,
+                     cfg: dict | None = None) -> list[dict]:
+    """cfg enables ablation studies without changing default behaviour:
+        cfg = {"components": [...subset of WEIGHTS...],
+               "penalty": bool, "behavioral": bool, "honeypot": bool}
+    When omitted, all components and gates are active (production config)."""
+    cfg = cfg or {}
+    active = cfg.get("components", list(J.WEIGHTS.keys()))
+    use_pen = cfg.get("penalty", True)
+    use_beh = cfg.get("behavioral", True)
+    use_honey = cfg.get("honeypot", True)
+    wsum = sum(J.WEIGHTS[k] for k in active) or 1.0
+    weights = {k: J.WEIGHTS[k] / wsum for k in active}  # renormalise over active
+
     # reference "today" = latest activity in the pool (recency is relative)
     today = date(2025, 1, 1)
     for c in candidates:
@@ -70,6 +83,7 @@ def score_candidates(candidates: list[dict], dense: np.ndarray | None = None,
         honey, hreason = F.is_honeypot(c)
 
         dom, dom_label = F.domain_score(c)
+        cred, cred_notes = F.credibility_score(c)
         ev, ev_hl = F.evidence_score(c)
         exp, yoe = F.experience_score(c)
         loc, loc_label = F.location_score(c)
@@ -78,11 +92,11 @@ def score_candidates(candidates: list[dict], dense: np.ndarray | None = None,
 
         comps = {
             "domain": dom, "evidence": ev, "semantic": float(sem[i]),
-            "location": loc, "experience": exp,
+            "location": loc, "credibility": cred, "experience": exp,
         }
-        base = sum(J.WEIGHTS[k] * comps[k] for k in J.WEIGHTS)
-        final = base * pen * beh
-        if honey:
+        base = sum(weights[k] * comps[k] for k in active)
+        final = base * (pen if use_pen else 1.0) * (beh if use_beh else 1.0)
+        if use_honey and honey:
             final = 0.0  # force honeypots to the bottom
 
         flags = {

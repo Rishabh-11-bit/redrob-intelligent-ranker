@@ -8,3 +8,4 @@ submission_*.csv
 data/*.jsonl
 deck/node_modules/
 deck/slide-*.jpg
+eval/cache.npz

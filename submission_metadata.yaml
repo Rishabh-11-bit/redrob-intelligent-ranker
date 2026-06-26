@@ -1,11 +1,12 @@
 # Redrob Hackathon — Submission Metadata
+# Fill the TODO fields before uploading via the portal.
 
-team_name: "rishabh-gaikwad"   
+team_name: "rishabh-gaikwad"   # change if you prefer a different display name
 
 primary_contact:
   name: "Rishabh Gaikwad"
   email: "rishabhgaikwad42@gmail.com"
-  phone: "+91-9518734544"          
+  phone: "+91-TODO"          # required for top-50 / top-10 outreach
 
 team_members:
   - name: "Rishabh Gaikwad"
@@ -15,8 +16,8 @@ team_members:
 # ---------------------------------------------------------------------------
 # Code and reproducibility
 # ---------------------------------------------------------------------------
-github_repo: "https://github.com/Rishabh-11-bit/redrob-intelligent-ranker"  
-sandbox_link: "https://huggingface.co/spaces/Rishabh-11-bit/redrob-ranker"    
+github_repo: "https://github.com/Rishabh-11-bit/redrob-intelligent-ranker"   # create this repo, then push
+sandbox_link: "https://huggingface.co/spaces/Rishabh-11-bit/redrob-ranker"   # TODO deploy
 
 reproduce_command: "python rank.py --candidates ./data/candidates.jsonl --out ./submission.csv"
 # Optional dense fusion (after running precompute_embeddings.py):
@@ -25,11 +26,11 @@ reproduce_command: "python rank.py --candidates ./data/candidates.jsonl --out ./
 #                --dense-ids ./artifacts/cand_ids.txt
 
 compute:
-  platform: "Windows"
+  platform: "TODO (e.g. Local Linux box / MacBook)"
   cpu_cores: 8
   ram_gb: 16
   python_version: "3.11"
-  os: "Windows"
+  os: "TODO"
   uses_gpu_for_inference: false
   has_network_during_ranking: false
   pre_computation_required: true            # dense embeddings precomputed offline

@@ -1,0 +1,16 @@
+=== 1. Name / gender / age blindness ===
+Protected attributes present in dataset schema : none (no gender/age/race fields)
+Only name field is 'anonymized_name'           : not read by the scorer
+Protected-attribute references in scorer source : NONE
+
+=== 2. Education-tier mix (pedigree-bias check) ===
+Pool   : {'tier_1': '6413 (6%)', 'tier_2': '22996 (23%)', 'tier_3': '39815 (40%)', 'tier_4': '30776 (31%)'}
+Top100 : {'tier_1': '54 (54%)', 'tier_2': '37 (37%)', 'tier_3': '9 (9%)'}
+(Education tier carries low weight; top 100 should not collapse onto tier_1.)
+
+=== 3. Company background (product vs services) ===
+Pool   : services-only career 9745 (10%)
+Top100 : services-only career 0 (0%)
+
+=== 4. Location (business rule, not demographic) ===
+Pool India 75%  |  Top100 India 95%  (JD requires India work authorisation - no visa sponsorship).

@@ -286,3 +286,57 @@ def is_honeypot(c: dict) -> tuple[bool, str]:
             return True, "current role has an end date"
 
     return False, ""
+
+
+# ---------------------------------------------------------------------------
+# 8. Credibility / competence  -> [0, 1]
+#    Uses signals the base ranker ignores: skill endorsements x duration
+#    (anti-stuffing trust), skill-assessment scores, GitHub activity,
+#    education tier, identity verification, profile completeness.
+# ---------------------------------------------------------------------------
+def credibility_score(c: dict) -> tuple[float, list[str]]:
+    s = c.get("redrob_signals", {})
+    notes: list[str] = []
+
+    # (a) skill trust: a real skill has endorsements AND tenure; "expert"/"advanced"
+    #     with zero endorsements and ~zero duration is stuffing.
+    skills = c.get("skills", []) or []
+    if skills:
+        trusts = []
+        stuffed = 0
+        for sk in skills:
+            end = sk.get("endorsements", 0) or 0
+            dur = sk.get("duration_months", 0) or 0
+            prof = sk.get("proficiency", "")
+            t = min(1.0, end / 12.0) * min(1.0, dur / 24.0)
+            trusts.append(t)
+            if prof in ("expert", "advanced") and end == 0 and dur <= 1:
+                stuffed += 1
+        skill_trust = sum(trusts) / len(trusts)
+        if stuffed >= 2:
+            skill_trust *= 0.5
+            notes.append("inflated skill claims")
+    else:
+        skill_trust = 0.3
+
+    # (b) assessment competence
+    asmt = s.get("skill_assessment_scores", {}) or {}
+    assessment = (sum(asmt.values()) / len(asmt) / 100.0) if asmt else 0.4
+
+    # (d) engineering activity
+    gh = min(1.0, (s.get("github_activity_score", 0) or 0) / 10.0)
+
+    # (e) identity verification + completeness
+    verified = (int(bool(s.get("verified_email"))) + int(bool(s.get("verified_phone")))) / 2.0
+    completeness = (s.get("profile_completeness_score", 50) or 50) / 100.0
+
+    # Education tier is deliberately EXCLUDED from scoring (fairness by design):
+    # we reward shipped work, not alma mater. A residual tier-1 concentration
+    # remains in the shortlist, but it reflects correlation in the talent pool
+    # (stronger candidates cluster there) - the ranker neither reads nor rewards
+    # pedigree. See eval/fairness_audit.py, which measures and discloses this.
+    score = (0.40 * skill_trust + 0.28 * assessment + 0.16 * gh +
+             0.06 * verified + 0.10 * completeness)
+    if assessment >= 0.7:
+        notes.append(f"assessments {assessment:.0%}")
+    return max(0.0, min(1.0, score)), notes

@@ -1,0 +1,15 @@
+
+configuration               NDCG@10  NDCG@50  honeypots non-tech  top100 chg
+------------------------------------------------------------------------------
+FULL system                   1.000    0.984          0        0           -
+- honeypot kill-switch        0.934    0.848         27        0          27
+- behavioral multiplier       0.961    0.962          0        0          17
+- disqualifier penalty        1.000    0.991          0        0           3
+- role/title gate             1.000    0.991          0        0           7
+- credibility                 1.000    0.992          0        0           4
+- semantic (hybrid)           1.000    0.992          0        0          10
+- build evidence              1.000    0.984          0        0          18
+- location fit                0.888    0.932          0        0          12
+
+Honeypots / non-tech / top100-change columns are objective (not rubric-derived).
+top100 chg = candidates that drop out of the top 100 when that part is removed.

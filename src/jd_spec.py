@@ -144,11 +144,12 @@ TIER1_INDIA_CITIES = [
 # heaviest because they are what separates true fits from keyword stuffers.
 # ---------------------------------------------------------------------------
 WEIGHTS = {
-    "domain":     0.30,   # title / role coherence  (anti-trap gate)
-    "evidence":   0.22,   # genuine ranking/search/rec build evidence
-    "semantic":   0.20,   # hybrid TF-IDF + dense similarity to JD
-    "location":   0.18,   # India / Pune-Noida requirement (hard constraint in JD)
-    "experience": 0.10,   # soft band around 6-8 yrs
+    "domain":     0.26,   # title / role coherence  (anti-trap gate)
+    "evidence":   0.20,   # genuine ranking/search/rec build evidence
+    "semantic":   0.18,   # hybrid TF-IDF + dense similarity to JD
+    "location":   0.16,   # India / Pune-Noida requirement (hard constraint in JD)
+    "credibility":0.12,   # skill-trust, assessments, activity (anti-stuffing)
+    "experience": 0.08,   # soft band around 6-8 yrs
 }
 
 # Experience band from the JD ("ideal" 6-8, range 5-9, soft outside).
